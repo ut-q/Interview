@@ -1,5 +1,5 @@
 ﻿using System;
-
+using InterviewCS.UnitTests.DataStructures;
 using InterviewCS.UnitTests.DataStructures.Graph;
 
 namespace InterviewCS
@@ -8,7 +8,11 @@ namespace InterviewCS
     {
         static void Main(string[] args)
         {
-            Test_NodeGraphUndirected.ExecuteUnitTest();
+            //Test_NodeGraphUndirected.ExecuteUnitTest();
+            //Test_LinkedList test = new Test_LinkedList();
+
+            var test = new Test_Vector();
+            test.Test();
         }
     }
 }
