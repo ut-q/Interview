@@ -4,7 +4,7 @@ using InterviewCS.DataStructures.LinkedList;
 
 namespace InterviewCS.UnitTests.DataStructures
 {
-    public class Test_LinkedList
+    public class Test_LinkedList : ITestable
     {
 
         public void Test()

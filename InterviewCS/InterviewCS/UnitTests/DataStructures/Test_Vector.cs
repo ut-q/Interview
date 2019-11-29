@@ -4,7 +4,7 @@ using InterviewCS.DataStructures.Vector;
 
 namespace InterviewCS.UnitTests.DataStructures
 {
-    public class Test_Vector
+    public class Test_Vector : ITestable
     {
         public void Test()
         {

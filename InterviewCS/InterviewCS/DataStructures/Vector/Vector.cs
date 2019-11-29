@@ -46,6 +46,12 @@ namespace InterviewCS.DataStructures.Vector
             Data = new T[Capacity];
         }
 
+        public T this[int index]
+        {
+            get => Data[index];
+            set => Data[index] = value;
+        }
+
         #endregion
 
         #region Functions
@@ -171,12 +177,17 @@ namespace InterviewCS.DataStructures.Vector
         {
             int index = IndexOf(item);
 
+            RemoveAt(index);
+        }
+
+        public void RemoveAt(int index)
+        {
             for (int i = index; i < Count - 1; ++i)
             {
                 Data[i] = Data[i + 1];
             }
 
-            Count--;
+            Count = Math.Max(0, Count - 1);
         }
 
         public void Reverse()

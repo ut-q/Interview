@@ -11,7 +11,7 @@ namespace InterviewCS
             //Test_NodeGraphUndirected.ExecuteUnitTest();
             //Test_LinkedList test = new Test_LinkedList();
 
-            var test = new Test_Vector();
+            var test = new Test_Queue();
             test.Test();
         }
     }
