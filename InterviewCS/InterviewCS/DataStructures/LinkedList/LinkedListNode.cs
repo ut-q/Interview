@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InterviewCS.DataStructures.LinkedList
 {
-    public class LinkedListNode<T> where T : IEquatable<T>
+    public class LinkedListNode<T> where T : IComparable<T>
     {
         public T Data { get; set; }
 

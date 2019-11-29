@@ -6,7 +6,7 @@ using System.Text;
 
 namespace InterviewCS.DataStructures.Vector
 {
-    public class Vector<T> : IEnumerable<T> where T:IEquatable<T>
+    public class Vector<T> : IEnumerable<T> where T:IComparable<T>
     {
         #region Properties and Constants
 
@@ -205,6 +205,19 @@ namespace InterviewCS.DataStructures.Vector
         public void Sort()
         {
             throw new NotImplementedException();
+        }
+
+        // maybe move to an extension?
+        public void Swap(int a, int b)
+        {
+            if (a < 0 || b < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            T temp = Data[a];
+            Data[a] = Data[b];
+            Data[b] = temp;
         }
 
         public T[] ToArray()

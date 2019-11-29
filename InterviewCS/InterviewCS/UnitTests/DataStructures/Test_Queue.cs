@@ -8,7 +8,7 @@ namespace InterviewCS.UnitTests.DataStructures
     {
         public void Test()
         {
-            Queue<int> s1 = new Queue<int>();
+            InterviewCS.DataStructures.Queue.Queue<int> s1 = new InterviewCS.DataStructures.Queue.Queue<int>();
 
             Console.WriteLine("Peek at an empty queue " + s1.Peek());
 

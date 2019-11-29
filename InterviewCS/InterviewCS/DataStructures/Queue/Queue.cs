@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using InterviewCS.DataStructures.LinkedList;
 
-namespace InterviewCS.UnitTests.DataStructures
+//TODO implement this with circular vector
+
+namespace InterviewCS.DataStructures.Queue
 {
-    public class Queue<T> : IEnumerable<T> where T : IEquatable<T>
+    public class Queue<T> : IEnumerable<T> where T : IComparable<T>
     {
         #region Properties and Constants
 

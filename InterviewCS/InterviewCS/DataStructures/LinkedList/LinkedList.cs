@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace InterviewCS.DataStructures.LinkedList
 {
-    public class LinkedList<T> : IEnumerable<LinkedListNode<T>> where T : IEquatable<T>
+    public class LinkedList<T> : IEnumerable<LinkedListNode<T>> where T : IComparable<T>
     {
         #region Properties
 
