@@ -7,28 +7,28 @@ using System.Threading;
 
 namespace InterviewCS.DataStructures.LinkedList
 {
-    public class LinkedList<T> : IEnumerable<LinkedListNode<T>> where T : IComparable<T>
+    public class DoublyLinkedList<T> : IEnumerable<DoublyLinkedListNode<T>> where T : IComparable<T>
     {
         #region Properties
 
-        public int Count { get; private set; }
+        public int Count { get; protected set; }
 
-        public LinkedListNode<T> Head { get; private set; }
+        public DoublyLinkedListNode<T> Head { get; protected set; }
 
-        public LinkedListNode<T> Tail { get; private set; }
+        public DoublyLinkedListNode<T> Tail { get; protected set; }
 
         #endregion
 
         #region Constructors
 
-        public LinkedList()
+        public DoublyLinkedList()
         {
             Count = 0;
             Head = null;
             Tail = null;
         }
 
-        public LinkedList(IEnumerable<T> list)
+        public DoublyLinkedList(IEnumerable<T> list)
         {
             Count = 0;
             Head = null;
@@ -48,7 +48,7 @@ namespace InterviewCS.DataStructures.LinkedList
         #region Functions
 
         // O(1), adds after the given node
-        public void AddAfter(LinkedListNode<T> node, T data)
+        public virtual void AddAfter(DoublyLinkedListNode<T> node, T data)
         {
             if (node == null)
             {
@@ -57,11 +57,17 @@ namespace InterviewCS.DataStructures.LinkedList
 
             var next = node.Next;
 
-            var n = new LinkedListNode<T>(data);
+            var n = new DoublyLinkedListNode<T>(data);
 
             node.Next = n;
+            n.Prev = node;
 
             n.Next = next;
+
+            if (next != null)
+            {
+                next.Prev = n;
+            }
 
             Count++;
 
@@ -72,7 +78,7 @@ namespace InterviewCS.DataStructures.LinkedList
             }
         }
 
-        public void AddBefore(LinkedListNode<T> node, T data)
+        public virtual void AddBefore(DoublyLinkedListNode<T> node, T data)
         {
             if (node == null)
             {
@@ -85,24 +91,24 @@ namespace InterviewCS.DataStructures.LinkedList
                 return;
             }
 
-            foreach (var n in this)
-            {
-                if (n.Next != null && n.Next == node)
-                {
-                    var newNode = new LinkedListNode<T>(data) { Next = n.Next};
-                    n.Next = newNode;
+            var newNode = new DoublyLinkedListNode<T>(data);
 
-                    Count++;
+            node.Prev.Next = newNode;
+            newNode.Next = node;
+            newNode.Prev = node.Prev;
+            node.Prev = newNode;
 
-                    return;
-                }
-            }
+            Count++;
         }
 
-        public void AddFirst(T data)
+        public virtual void AddFirst(T data)
         {
-            var n = new LinkedListNode<T>(data) {Next = Head};
+            var n = new DoublyLinkedListNode<T>(data) { Next = Head };
 
+            if (Head != null)
+            {
+                Head.Prev = n;
+            }
             Head = n;
 
             if (Count == 0)
@@ -115,13 +121,14 @@ namespace InterviewCS.DataStructures.LinkedList
 
         public void AddLast(T data)
         {
-            var n = new LinkedListNode<T>(data);
+            var n = new DoublyLinkedListNode<T>(data);
 
             if (Tail != null)
             {
                 Tail.Next = n;
             }
 
+            n.Prev = Tail;
             Tail = n;
 
             if (Count == 0)
@@ -151,7 +158,7 @@ namespace InterviewCS.DataStructures.LinkedList
             return false;
         }
 
-        public LinkedListNode<T> Find(T data)
+        public DoublyLinkedListNode<T> Find(T data)
         {
             foreach (var node in this)
             {
@@ -164,7 +171,7 @@ namespace InterviewCS.DataStructures.LinkedList
             return null;
         }
 
-        public IEnumerator<LinkedListNode<T>> GetEnumerator()
+        public IEnumerator<DoublyLinkedListNode<T>> GetEnumerator()
         {
             var node = Head;
 
@@ -233,21 +240,14 @@ namespace InterviewCS.DataStructures.LinkedList
                 return;
             }
 
-            foreach (var node in this)
+            Tail = Tail.Prev;
+            Tail.Next = null;
+
+            if (Count == 1)
             {
-                if (node != null && node.Next != null)
-                {
-                    if (node.Next == Tail)
-                    {
-                        Tail = node;
-                        Tail.Next = null;
-
-                        Count--;
-
-                        return;
-                    }
-                }
+                Tail = Head;
             }
+            Count--;
         }
 
         public override string ToString()

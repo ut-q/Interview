@@ -82,6 +82,7 @@ namespace InterviewCS.DataStructures.Tree
             return GetEnumerator();
         }
 
+        // TODO implement identical keys
         public void Insert(T item)
         {
             TreeNode<T> parent = null;
