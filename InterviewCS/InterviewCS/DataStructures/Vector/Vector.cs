@@ -185,6 +185,7 @@ namespace InterviewCS.DataStructures.Vector
             for (int i = index; i < Count - 1; ++i)
             {
                 Data[i] = Data[i + 1];
+                Data[i + 1] = default(T);
             }
 
             Count = Math.Max(0, Count - 1);
