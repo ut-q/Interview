@@ -6,7 +6,7 @@ using System.Text;
 
 namespace InterviewCS.DataStructures.Vector
 {
-    public class Vector<T> : IEnumerable<T> where T:IComparable<T>
+    public class Vector<T> : IEnumerable<T>
     {
         #region Properties and Constants
 
@@ -48,8 +48,22 @@ namespace InterviewCS.DataStructures.Vector
 
         public T this[int index]
         {
-            get => Data[index];
-            set => Data[index] = value;
+            get
+            {
+                if (index >= Count)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                return Data[index];
+            } 
+            set
+            {
+                if (index >= Count)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Data[index] = value;
+            }
         }
 
         #endregion
@@ -82,6 +96,19 @@ namespace InterviewCS.DataStructures.Vector
             foreach (var i in this)
             {
                 if (i.Equals(item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool Exists(Predicate<T> predicate)
+        {
+            foreach (var i in this)
+            {
+                if (predicate(i))
                 {
                     return true;
                 }

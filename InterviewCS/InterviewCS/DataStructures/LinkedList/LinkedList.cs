@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using InterviewCS.DataStructures.Vector;
 
 namespace InterviewCS.DataStructures.LinkedList
 {
-    public class LinkedList<T> : IEnumerable<LinkedListNode<T>> where T : IComparable<T>
+    public class LinkedList<T> : IEnumerable<LinkedListNode<T>>
     {
         #region Properties
 
@@ -151,6 +152,19 @@ namespace InterviewCS.DataStructures.LinkedList
             return false;
         }
 
+        public bool Exists(Predicate<T> predicate)
+        {
+            foreach (var i in this)
+            {
+                if (predicate(i.Data))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public LinkedListNode<T> Find(T data)
         {
             foreach (var node in this)
@@ -162,6 +176,34 @@ namespace InterviewCS.DataStructures.LinkedList
             }
 
             return null;
+        }
+
+        public T Find(Predicate<T> predicate)
+        {
+            foreach (var i in this)
+            {
+                if (predicate(i.Data))
+                {
+                    return i.Data;
+                }
+            }
+
+            return default(T);
+        }
+
+        public Vector<T> FindAll(Predicate<T> predicate)
+        {
+            var vector = new Vector<T>();
+
+            foreach (var i in this)
+            {
+                if (predicate(i.Data))
+                {
+                    vector.Add(i.Data);
+                }
+            }
+
+            return vector;
         }
 
         public IEnumerator<LinkedListNode<T>> GetEnumerator()
