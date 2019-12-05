@@ -22,7 +22,7 @@ namespace InterviewCS.DataStructures.Dictionary
         public double MaxLoadFactor { get; }
 
 
-        private const int _defaultCapacity = 8;
+        private const int _defaultCapacity = 17;
 
         public double LoadFactor => Items.Capacity > 0 ? (double)Count / Items.Capacity : 0;
 
@@ -198,7 +198,7 @@ namespace InterviewCS.DataStructures.Dictionary
 
         private int GetPosition(TKey key)
         {
-            return key.GetHashCode() % Items.Capacity;
+            return Math.Abs(key.GetHashCode()) % Items.Capacity;
         }
 
         private bool RequiresReallocation()
