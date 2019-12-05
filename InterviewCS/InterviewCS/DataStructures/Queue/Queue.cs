@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace InterviewCS.DataStructures.Queue
 {
-    public class Queue<T> : IEnumerable<T> where T : IComparable<T>
+    public class Queue<T> : IEnumerable<T>
     {
         #region Properties and Constants
 

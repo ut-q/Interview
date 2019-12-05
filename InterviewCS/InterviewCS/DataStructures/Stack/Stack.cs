@@ -6,7 +6,7 @@ using System.Text;
 
 namespace InterviewCS.DataStructures.Stack
 {
-    public class Stack<T> : IEnumerable<T> where T : IComparable<T>
+    public class Stack<T> : IEnumerable<T>
     {
         #region Properties and Constants
 
