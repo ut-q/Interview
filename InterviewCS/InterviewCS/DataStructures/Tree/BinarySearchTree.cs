@@ -9,7 +9,7 @@ namespace InterviewCS.DataStructures.Tree
     {
         #region Properties and Constants
 
-        public int Count { get; private set; }
+        public int Count { get; protected set; }
 
 
         #endregion
@@ -20,12 +20,14 @@ namespace InterviewCS.DataStructures.Tree
         {
             Count = 0;
             Root = null;
+            EdgeSentinel = null;
         }
 
         public BinarySearchTree(T rootData)
         {
             Count = 0;
             Root = new TreeNode<T>(rootData);
+            EdgeSentinel = null;
         }
 
         public BinarySearchTree(IEnumerable<T> list)
@@ -50,6 +52,13 @@ namespace InterviewCS.DataStructures.Tree
             return Contains_Internal(Root, item);
         }
 
+        //TODO FIX THIS MONSTROSITY
+        public T Find(T item)
+        {
+            var node = Find_Internal(Root, item);
+            return node != null ? node.Data : default(T);
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             Queue.Queue<TreeNode<T>> q = new Queue.Queue<TreeNode<T>>();
@@ -65,12 +74,12 @@ namespace InterviewCS.DataStructures.Tree
 
                 yield return node.Data;
 
-                if (node.Left != null)
+                if (!IsEdgeSentinel(node.Left))
                 {
                     q.Enqueue(node.Left);
                 }
 
-                if (node.Right != null)
+                if (!IsEdgeSentinel(node.Right))
                 {
                     q.Enqueue(node.Right);
                 }
@@ -83,35 +92,10 @@ namespace InterviewCS.DataStructures.Tree
         }
 
         // TODO implement identical keys
-        public void Insert(T item)
+        public virtual void Insert(T item)
         {
-            TreeNode<T> parent = null;
-            TreeNode<T> node = Root;
-
-            TreeNode<T> newNode = new TreeNode<T>(item);
-
-            while (node != null)
-            {
-                parent = node;
-                node = node.CompareTo(newNode) > 0 ? node.Left : node.Right;
-            }
-
-            newNode.Parent = parent;
-
-            if (parent == null)
-            {
-                Root = newNode;
-            }
-            else if (newNode.CompareTo(parent) < 0)
-            {
-                parent.Left = newNode;
-            }
-            else
-            {
-                parent.Right = newNode;
-            }
-
-            Count++;
+            TreeNode<T> node = new TreeNode<T>(item, edgeSentinel: EdgeSentinel);
+            Insert_Internal(node);
         }
 
         public T Maximum()
@@ -124,19 +108,19 @@ namespace InterviewCS.DataStructures.Tree
             return MinimumNode().Data;
         }
 
-        public void Remove(T item)
+        public virtual void Remove(T item)
         {
-            var node = Find(Root, item);
+            var node = Find_Internal(Root, item);
             if (node == null)
             {
                 return;
             }
 
-            if (node.Left == null)
+            if (IsEdgeSentinel(node.Left))
             {
                 Transplant(node, node.Right);
             }
-            else if (node.Right == null)
+            else if (IsEdgeSentinel(node.Right))
             {
                 Transplant(node, node.Left);
             }
@@ -186,7 +170,7 @@ namespace InterviewCS.DataStructures.Tree
 
             while (node != null || stack.Count != 0)
             {
-                while (node != null)
+                while (node != null && !IsEdgeSentinel(node))
                 {
                     stack.Push(node);
 
@@ -219,50 +203,76 @@ namespace InterviewCS.DataStructures.Tree
 
         #region Private Members
 
-        private TreeNode<T> Root { get; set; }
+        protected TreeNode<T> Root { get; set; }
 
-        private class TreeNode<T> : IComparable<TreeNode<T>> where T : IComparable<T>
+        protected TreeNode<T> EdgeSentinel { get; set; }
+
+        protected class TreeNode<T> : IComparable<TreeNode<T>> where T : IComparable<T>
         {
             public TreeNode<T> Parent { get; set; }
             public TreeNode<T> Left { get; set; }
             public TreeNode<T> Right { get; set; }
             public T Data { get; set; }
 
+            // reference for the children of edge nodes
+            private TreeNode<T> EdgeSentinel { get; set; }
 
-            public TreeNode(T data, TreeNode<T> parent = null)
+            // don't use this
+            public TreeNode()
+            {
+                EdgeSentinel = null;
+                Parent = null;
+                Left = EdgeSentinel;
+                Right = EdgeSentinel;
+                Data = default(T);
+            }
+
+            public TreeNode(T data, TreeNode<T> parent = null, TreeNode<T> edgeSentinel = null)
             {
                 Parent = parent;
-                Left = null;
-                Right = null;
+                EdgeSentinel = edgeSentinel;
+                Left = EdgeSentinel;
+                Right = EdgeSentinel;
                 Data = data;
             }
 
             public int CompareTo(TreeNode<T> obj)
             {
+                if (obj == null)
+                {
+                    return 1;
+                }
+                if (Data == null && obj.Data == null)
+                {
+                    return 0;
+                }
+                if (Data == null)
+                {
+                    return -1;
+                }
+                if (obj.Data == null)
+                {
+                    return 1;
+                }
                 return Data.CompareTo(obj.Data);
-            }
-
-            public bool IsRoot()
-            {
-                return Parent == null;
             }
 
             public bool IsLeftChild()
             {
-                return Parent.Left != null && CompareTo(Parent.Left) == 0;
+                return Parent.Left != null && this == Parent.Left;
             }
 
             public bool IsRightChild()
             {
-                return Parent.Right != null && CompareTo(Parent.Right) == 0;
+                return Parent.Right != null && this == Parent.Right;
             }
         }
 
         #endregion
 
-        private void Transplant(TreeNode<T> source, TreeNode<T> dest)
+        protected void Transplant(TreeNode<T> source, TreeNode<T> dest)
         {
-            if (source.IsRoot())
+            if (IsRoot(source))
             {
                 Root = dest;
             }
@@ -282,7 +292,7 @@ namespace InterviewCS.DataStructures.Tree
             }
         }
 
-        private TreeNode<T> Find(TreeNode<T>  node, T item)
+        protected TreeNode<T> Find_Internal(TreeNode<T>  node, T item)
         {
             if (node == null)
             {
@@ -296,15 +306,15 @@ namespace InterviewCS.DataStructures.Tree
 
             if (node.Data.CompareTo(item) < 0)
             {
-                return Find(node.Right, item);
+                return Find_Internal(node.Right, item);
             }
             else
             {
-                return Find(node.Left, item);
+                return Find_Internal(node.Left, item);
             }
         }
 
-        private TreeNode<T> MaximumNode(TreeNode<T> node = null)
+        protected TreeNode<T> MaximumNode(TreeNode<T> node = null)
         {
             if (Root == null)
             {
@@ -316,7 +326,7 @@ namespace InterviewCS.DataStructures.Tree
                 node = Root;
             }
 
-            while (node.Right != null)
+            while (!IsEdgeSentinel(node.Right))
             {
                 node = node.Right;
             }
@@ -324,7 +334,7 @@ namespace InterviewCS.DataStructures.Tree
             return node;
         }
 
-        private TreeNode<T> MinimumNode(TreeNode<T> node = null)
+        protected TreeNode<T> MinimumNode(TreeNode<T> node = null)
         {
             if (Root == null)
             {
@@ -336,7 +346,7 @@ namespace InterviewCS.DataStructures.Tree
                 node = Root;
             }
 
-            while (node.Left != null)
+            while (!IsEdgeSentinel(node.Left))
             {
                 node = node.Left;
             }
@@ -364,6 +374,45 @@ namespace InterviewCS.DataStructures.Tree
             {
                 return Contains_Internal(node.Right, item);
             }
+        }
+
+        protected bool IsEdgeSentinel(TreeNode<T> node)
+        {
+            return node == null || node == EdgeSentinel;
+        }
+
+        protected virtual bool IsRoot(TreeNode<T> node)
+        {
+            return node != null && node.Parent == null;
+        }
+
+        protected void Insert_Internal(TreeNode<T> newNode)
+        {
+            TreeNode<T> parent = null;
+            TreeNode<T> node = Root;
+
+            while (!IsEdgeSentinel(node))
+            {
+                parent = node;
+                node = node.CompareTo(newNode) > 0 ? node.Left : node.Right;
+            }
+
+            newNode.Parent = parent;
+
+            if (IsRoot(newNode))
+            {
+                Root = newNode;
+            }
+            else if (parent != null && newNode.CompareTo(parent) < 0)
+            {
+                parent.Left = newNode;
+            }
+            else if(parent != null)
+            {
+                parent.Right = newNode;
+            }
+
+            Count++;
         }
 
     }

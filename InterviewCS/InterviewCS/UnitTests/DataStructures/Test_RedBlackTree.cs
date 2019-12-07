@@ -6,12 +6,11 @@ using InterviewCS.DataStructures.Vector;
 
 namespace InterviewCS.UnitTests.DataStructures
 {
-    public class Test_BinarySearchTree : ITestable
-    { 
-        // DO THIS WHEN YOU HAVE ALLLL THE TIME IN THE WORLD
+    public class Test_RedBlackTree : ITestable
+    {
         public void Test()
         {
-            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+            RedBlackTree<int> tree = new RedBlackTree<int>();
 
             tree.Insert(5);
             tree.Insert(8);
@@ -54,7 +53,7 @@ namespace InterviewCS.UnitTests.DataStructures
 
             Console.WriteLine("Contains 1 " + tree.Contains(1));
 
-            tree = new BinarySearchTree<int>(new int[]{5,4,3,2,8,7,5});
+            tree = new RedBlackTree<int>(new int[] { 5, 4, 3, 2, 8, 7, 5 });
 
             Console.WriteLine(tree);
 
