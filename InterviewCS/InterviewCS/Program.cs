@@ -8,11 +8,9 @@ namespace InterviewCS
     {
         static void Main(string[] args)
         {
-            //Test_NodeGraphUndirected.ExecuteUnitTest();
-            //Test_LinkedList test = new Test_LinkedList();
-
-            var test = new Test_HashSet();
-            test.Test();
+            //UNIT TEST FORMAT:
+            //var test = new Test_HashSet();
+            //test.Test();
         }
     }
 }
